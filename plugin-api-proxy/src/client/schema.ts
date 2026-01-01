@@ -28,6 +28,15 @@ var addNewFormDrawer = {
                     'x-decorator': 'FormItem',
                     'x-component': 'CollectionField',
                   },
+                  preset: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                  },
+                  method: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    default: 'GET',
+                  },
                   url: {
                     'x-decorator': 'FormItem',
                     'x-component': 'CollectionField',
@@ -42,6 +51,106 @@ var addNewFormDrawer = {
                   },
                 },
               },
+              tabMapping: {
+                type: 'void',
+                title: '{{t("マッピング設定")}}',
+                'x-component': 'Tabs.TabPane',
+                properties: {
+                  mappingEnabled: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    default: false,
+                  },
+                  mappingMode: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    default: 'json',
+                    'x-reactions': {
+                      dependencies: ['mappingEnabled'],
+                      fulfill: {
+                        state: {
+                          visible: '{{$deps[0] === true}}',
+                        },
+                      },
+                    },
+                  },
+                  isList: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    'x-reactions': {
+                      dependencies: ['mappingEnabled', 'mappingMode'],
+                      fulfill: {
+                        state: {
+                          visible: '{{$deps[0] && $deps[1] === "json"}}',
+                        },
+                      },
+                    },
+                  },
+                  listPath: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    'x-reactions': {
+                      dependencies: ['mappingEnabled', 'mappingMode', 'isList'],
+                      fulfill: {
+                        state: {
+                          visible: '{{$deps[0] && $deps[1] === "json" && $deps[2]}}',
+                        },
+                      },
+                    },
+                  },
+                  csvHasHeader: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    'x-reactions': {
+                      dependencies: ['mappingEnabled', 'mappingMode'],
+                      fulfill: {
+                        state: {
+                          visible: '{{$deps[0] && $deps[1] === "csv"}}',
+                        },
+                      },
+                    },
+                  },
+                  requestMapping: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    'x-reactions': {
+                      dependencies: ['mappingEnabled'],
+                      fulfill: {
+                        state: {
+                          visible: '{{$deps[0] === true}}',
+                        },
+                      },
+                    },
+                  },
+                  responseMapping: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    'x-reactions': {
+                      dependencies: ['mappingEnabled'],
+                      fulfill: {
+                        state: {
+                          visible: '{{$deps[0] === true}}',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              tabTesting: {
+                type: 'void',
+                title: '{{t("テスト設定")}}',
+                'x-component': 'Tabs.TabPane',
+                properties: {
+                  testParams: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                  },
+                  expectedResponse: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                  },
+                },
+              },
               tab2: {
                 type: 'void',
                 title: '{{t("利用制限設定")}}',
@@ -50,6 +159,7 @@ var addNewFormDrawer = {
                   limit: {
                     'x-decorator': 'FormItem',
                     'x-component': 'CollectionField',
+                    default: 'none',
                   },
                   maxRequests: {
                     'x-decorator': 'FormItem',
@@ -126,6 +236,7 @@ var addNewFormDrawer = {
                   timezone: {
                     'x-decorator': 'FormItem',
                     'x-component': 'CollectionField',
+                    default: 'UTC',
                     'x-reactions': {
                       dependencies: ['limit'],
                       fulfill: {
@@ -313,7 +424,7 @@ export const settingPageSchema: ISchema = {
               properties: {
                 edit: {
                   type: 'void',
-                  title: '{{("編集")}}',
+                  title: '{{t("編集")}}',
                   'x-component': 'Action.Link',
                   'x-component-props': {
                     openMode: 'drawer',

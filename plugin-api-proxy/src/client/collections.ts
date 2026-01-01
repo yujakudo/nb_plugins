@@ -1,4 +1,3 @@
-
 // 利用制限の選択肢の配列
 export const enumRequestLimit = [
   { label: '{{t("なし")}}', value: 'none' },
@@ -6,6 +5,12 @@ export const enumRequestLimit = [
   { label: '{{t("週ごと")}}', value: 'weekly' },
   { label: '{{t("月ごと")}}', value: 'monthly' },
   { label: '{{t("年ごと")}}', value: 'yearly' },
+];
+
+export const enumMappingMode = [
+  { label: 'JSON', value: 'json' },
+  { label: 'CSV', value: 'csv' },
+  { label: '{{t("テキスト")}}', value: 'text' },
 ];
 
 /**
@@ -27,6 +32,26 @@ export const apiProxyApisCollection = {
         title: '{{t("名前")}}',
         required: true,
         'x-component': 'Input',
+        'x-decorator-props': {
+          tooltip: '{{t("名前Tooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'string',
+      name: 'method',
+      interface: 'select',
+      uiSchema: {
+        title: '{{t("メソッド")}}',
+        'x-component': 'Select',
+        enum: [
+          { label: 'GET', value: 'GET' },
+          { label: 'POST', value: 'POST' },
+        ],
+        default: 'GET',
+        'x-decorator-props': {
+          tooltip: '{{t("メソッドTooltip")}}',
+        },
       },
     },
     {
@@ -37,6 +62,9 @@ export const apiProxyApisCollection = {
         title: '{{t("URL")}}',
         required: true,
         'x-component': 'Input.URL',
+        'x-decorator-props': {
+          tooltip: '{{t("URLTooltip")}}',
+        },
       },
     },
     {
@@ -45,7 +73,10 @@ export const apiProxyApisCollection = {
       interface: 'textarea',
       uiSchema: {
         title: '{{t("説明")}}',
-        'x-component': 'Input.TextArea',
+        'x-component': 'Markdown',
+        'x-decorator-props': {
+          tooltip: '{{t("説明Tooltip")}}',
+        },
       },
     },
     {
@@ -55,6 +86,9 @@ export const apiProxyApisCollection = {
       uiSchema: {
         title: '{{t("ヘッダ")}}',
         'x-component': 'Input.JSON',
+        'x-decorator-props': {
+          tooltip: '{{t("ヘッダTooltip")}}',
+        },
       },
     },
     {
@@ -66,6 +100,12 @@ export const apiProxyApisCollection = {
         enum: enumRequestLimit, // none, daily, weekly, monthly, yearly 
         default: 'none',
         'x-component': 'Select',
+        'x-component-props': {
+          allowClear: false,
+        },
+        'x-decorator-props': {
+          tooltip: '{{t("利用制限Tooltip")}}',
+        },
       },
     },
     {
@@ -76,6 +116,9 @@ export const apiProxyApisCollection = {
         title: '{{t("最大利用回数")}}',
         'x-component': 'Input',
         default: 0,
+        'x-decorator-props': {
+          tooltip: '{{t("最大利用回数Tooltip")}}',
+        },
       },
     },
     {
@@ -95,6 +138,9 @@ export const apiProxyApisCollection = {
         ],
         default: 0,
         'x-component': 'Select',
+        'x-decorator-props': {
+          tooltip: '{{t("開始曜日Tooltip")}}',
+        },
       },
     },
     {
@@ -106,6 +152,9 @@ export const apiProxyApisCollection = {
         'x-component': 'Input',
         minimum: 1,
         maximum: 12,
+        'x-decorator-props': {
+          tooltip: '{{t("開始月Tooltip")}}',
+        },
       },
     },
     {
@@ -117,6 +166,9 @@ export const apiProxyApisCollection = {
         'x-component': 'Input',
         minimum: 1,
         maximum: 31,
+        'x-decorator-props': {
+          tooltip: '{{t("開始日Tooltip")}}',
+        },
       },
     },
     {
@@ -126,6 +178,9 @@ export const apiProxyApisCollection = {
       uiSchema: {
         title: '{{t("開始時刻")}}',
         'x-component': 'TimePicker',
+        'x-decorator-props': {
+          tooltip: '{{t("開始時刻Tooltip")}}',
+        },
       },
     },
     {
@@ -149,11 +204,21 @@ export const apiProxyApisCollection = {
         'x-decorator': 'FormItem',
         enum: [
           { label: 'UTC', value: 'UTC' },
-          { label: 'Asia/Tokyo', value: 'Asia/Tokyo' },
+          { label: 'America/Los_Angeles', value: 'America/Los_Angeles' },
           { label: 'America/New_York', value: 'America/New_York' },
+          { label: 'Asia/Dubai', value: 'Asia/Dubai' },
+          { label: 'Asia/Kolkata', value: 'Asia/Kolkata' },
+          { label: 'Asia/Shanghai', value: 'Asia/Shanghai' },
+          { label: 'Asia/Singapore', value: 'Asia/Singapore' },
+          { label: 'Asia/Tokyo', value: 'Asia/Tokyo' },
+          { label: 'Europe/Berlin', value: 'Europe/Berlin' },
           { label: 'Europe/London', value: 'Europe/London' },
+          { label: 'Europe/Moscow', value: 'Europe/Moscow' },
         ],
         default: 'UTC',
+        'x-decorator-props': {
+          tooltip: '{{t("タイムゾーンTooltip")}}',
+        },
       },
     },
     {
@@ -180,6 +245,146 @@ export const apiProxyApisCollection = {
           showTime: true,
         },
         readOnly: true,
+      },
+    },
+    {
+      type: 'string',
+      name: 'preset',
+      interface: 'select',
+      uiSchema: {
+        title: '{{t("プリセット")}}',
+        'x-component': 'Select',
+        'x-decorator-props': {
+          tooltip: '{{t("プリセットTooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'boolean',
+      name: 'mappingEnabled',
+      interface: 'checkbox',
+      uiSchema: {
+        title: '{{t("マッピングの有効化")}}',
+        'x-component': 'Checkbox',
+        default: false,
+        'x-decorator-props': {
+          tooltip: '{{t("マッピングの有効化Tooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'string',
+      name: 'mappingMode',
+      interface: 'select',
+      uiSchema: {
+        title: '{{t("レスポンスの種類")}}',
+        enum: enumMappingMode,
+        default: 'json',
+        'x-component': 'Select',
+        'x-component-props': {
+          allowClear: false,
+        },
+        'x-decorator-props': {
+          tooltip: '{{t("レスポンスの種類Tooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'boolean',
+      name: 'isList',
+      interface: 'checkbox',
+      uiSchema: {
+        title: '{{t("リスト")}}',
+        'x-component': 'Checkbox',
+        default: false,
+        'x-decorator-props': {
+          tooltip: '{{t("リストTooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'string',
+      name: 'listPath',
+      interface: 'input',
+      uiSchema: {
+        title: '{{t("リスト要素")}}',
+        'x-component': 'Input',
+        'x-decorator-props': {
+          tooltip: '{{t("リスト要素Tooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'boolean',
+      name: 'csvHasHeader',
+      interface: 'checkbox',
+      uiSchema: {
+        title: '{{t("一列目が列名")}}',
+        'x-component': 'Checkbox',
+        default: true,
+        'x-decorator-props': {
+          tooltip: '{{t("一列目が列名Tooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'text',
+      name: 'requestMapping',
+      interface: 'textarea',
+      uiSchema: {
+        title: '{{t("リクエストマッピング")}}',
+        'x-component': 'Input.TextArea',
+        'x-decorator-props': {
+          tooltip: '{{t("リクエストマッピングTooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'json',
+      name: 'responseMapping',
+      interface: 'json',
+      uiSchema: {
+        title: '{{t("レスポンスマッピング")}}',
+        'x-component': 'Input.JSON',
+        'x-decorator-props': {
+          tooltip: '{{t("レスポンスマッピングTooltipJSON")}}',
+        },
+        'x-reactions': [
+          {
+            dependencies: ['mappingMode'],
+            fulfill: {
+              state: {
+                decoratorProps: {
+                  tooltip: '{{$deps[0] === "csv" ? t("レスポンスマッピングTooltipCSV") : ($deps[0] === "text" ? t("レスポンスマッピングTooltipText") : t("レスポンスマッピングTooltipJSON"))}}',
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+    {
+      type: 'text',
+      name: 'testParams',
+      interface: 'textarea',
+      uiSchema: {
+        title: '{{t("テストパラメータ")}}',
+        'x-component': 'Input.TextArea',
+        'x-decorator-props': {
+          tooltip: '{{t("テストパラメータTooltip")}}',
+        },
+      },
+    },
+    {
+      type: 'text',
+      name: 'expectedResponse',
+      interface: 'textarea',
+      uiSchema: {
+        title: '{{t("期待されるレスポンス")}}',
+        'x-component': 'Input.TextArea',
+        'x-decorator-props': {
+          tooltip: '{{t("期待されるレスポンスTooltip")}}',
+        },
       },
     },
   ],

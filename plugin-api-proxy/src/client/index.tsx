@@ -1,13 +1,16 @@
-// client/index.tsx
-import { Plugin } from '@nocobase/client';
+import {
+  ExtendCollectionsProvider,
+  SchemaComponent,
+  Icon,
+  Plugin,
+} from '@nocobase/client';
 import { name } from '../../package.json';
 import React from 'react';
-import { ExtendCollectionsProvider, SchemaComponent } from '@nocobase/client';
 import { apiProxyApisCollection } from './collections';
 import { useSubmitActionProps, useEditFormProps, useDeleteActionProps } from './hooks';
 import { settingPageSchema } from './schema';
 
-class ApiProxyPluginClient extends Plugin {
+const ApiProxyPluginClient = class extends Plugin {
   async load() {
     // 設定ページの登録
     this.app.pluginSettingsManager.add(name, {
@@ -16,12 +19,15 @@ class ApiProxyPluginClient extends Plugin {
       Component: () => {
         return (
           <ExtendCollectionsProvider collections={[apiProxyApisCollection]}>
-            <SchemaComponent schema={settingPageSchema} scope={{ useSubmitActionProps, useEditFormProps, useDeleteActionProps }} />
+            <SchemaComponent
+              schema={settingPageSchema}
+              scope={{ useSubmitActionProps, useEditFormProps, useDeleteActionProps, Icon }}
+            />
           </ExtendCollectionsProvider>
         );
       },
     });
   }
-}
+};
 
 export default ApiProxyPluginClient;

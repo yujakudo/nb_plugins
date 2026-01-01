@@ -44,6 +44,31 @@ export default defineCollection({
     { type: 'date', name: 'nextResetAt' },
     // タイムゾーン
     { type: 'string', name: 'timezone', defaultValue: 'UTC' },
+    // プリセット
+    { type: 'string', name: 'preset' },
+    // マッピングモード
+    {
+      type: 'string',
+      name: 'mappingMode',
+      allowNull: false,
+      defaultValue: 'json', // json, csv, text
+    },
+    // マッピングの有効化
+    { type: 'boolean', name: 'mappingEnabled', defaultValue: false },
+    // リストか単一データか
+    { type: 'boolean', name: 'isList', defaultValue: false },
+    // JSONのリスト要素パス
+    { type: 'string', name: 'listPath' },
+    // CSVの一列目が列名か
+    { type: 'boolean', name: 'csvHasHeader', defaultValue: true },
+    // リクエストマッピング
+    { type: 'text', name: 'requestMapping' },
+    // レスポンスマッピング
+    { type: 'json', name: 'responseMapping' },
+    // テストパラメータ
+    { type: 'text', name: 'testParams' },
+    // 期待されるレスポンス
+    { type: 'text', name: 'expectedResponse' },
     // 次回繰越用カウンタ（内部用）
     { type: 'integer', name: 'reserveCount', defaultValue: 0 },
   ],
@@ -66,5 +91,15 @@ export interface ApiProxyRecord {
   lastAccessAt?: Date;
   nextResetAt?: Date;
   timezone?: string;
+  preset?: string;
+  mappingEnabled: boolean;
+  mappingMode: 'none' | 'json' | 'csv' | 'text';
+  isList: boolean;
+  listPath?: string;
+  csvHasHeader: boolean;
+  requestMapping?: any;
+  responseMapping?: any;
+  testParams?: string;
+  expectedResponse?: string;
   reserveCount?: number;
 };
