@@ -61,6 +61,18 @@ var addNewFormDrawer = {
                     'x-component': 'CollectionField',
                     default: false,
                   },
+                  requestMapping: {
+                    'x-decorator': 'FormItem',
+                    'x-component': 'CollectionField',
+                    'x-reactions': {
+                      dependencies: ['mappingEnabled'],
+                      fulfill: {
+                        state: {
+                          visible: '{{$deps[0] === true}}',
+                        },
+                      },
+                    },
+                  },
                   mappingMode: {
                     'x-decorator': 'FormItem',
                     'x-component': 'CollectionField',
@@ -106,18 +118,6 @@ var addNewFormDrawer = {
                       fulfill: {
                         state: {
                           visible: '{{$deps[0] && $deps[1] === "csv"}}',
-                        },
-                      },
-                    },
-                  },
-                  requestMapping: {
-                    'x-decorator': 'FormItem',
-                    'x-component': 'CollectionField',
-                    'x-reactions': {
-                      dependencies: ['mappingEnabled'],
-                      fulfill: {
-                        state: {
-                          visible: '{{$deps[0] === true}}',
                         },
                       },
                     },

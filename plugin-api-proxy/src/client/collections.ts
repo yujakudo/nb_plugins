@@ -44,6 +44,9 @@ export const apiProxyApisCollection = {
       uiSchema: {
         title: '{{t("メソッド")}}',
         'x-component': 'Select',
+        'x-component-props': {
+          allowClear: false,
+        },
         enum: [
           { label: 'GET', value: 'GET' },
           { label: 'POST', value: 'POST' },
@@ -266,6 +269,7 @@ export const apiProxyApisCollection = {
       uiSchema: {
         title: '{{t("マッピングの有効化")}}',
         'x-component': 'Checkbox',
+        'x-content': '{{t("マッピングを有効にする")}}',
         default: false,
         'x-decorator-props': {
           tooltip: '{{t("マッピングの有効化Tooltip")}}',
@@ -296,6 +300,7 @@ export const apiProxyApisCollection = {
       uiSchema: {
         title: '{{t("リスト")}}',
         'x-component': 'Checkbox',
+        'x-content': '{{t("APIのレスポンスは配列")}}',
         default: false,
         'x-decorator-props': {
           tooltip: '{{t("リストTooltip")}}',
@@ -321,6 +326,7 @@ export const apiProxyApisCollection = {
       uiSchema: {
         title: '{{t("一列目が列名")}}',
         'x-component': 'Checkbox',
+        'x-content': '{{t("一列目が列名のラベルであることを示す")}}',
         default: true,
         'x-decorator-props': {
           tooltip: '{{t("一列目が列名Tooltip")}}',

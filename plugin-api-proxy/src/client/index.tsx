@@ -9,19 +9,21 @@ import React from 'react';
 import { apiProxyApisCollection } from './collections';
 import { useSubmitActionProps, useEditFormProps, useDeleteActionProps } from './hooks';
 import { settingPageSchema } from './schema';
+import { useT } from './locale';
 
-const ApiProxyPluginClient = class extends Plugin {
+class ApiProxyPluginClient extends Plugin {
   async load() {
     // 設定ページの登録
     this.app.pluginSettingsManager.add(name, {
       title: '{{t("APIプロキシ")}}',
       icon: 'ApiOutlined',
       Component: () => {
+        const t = useT();
         return (
           <ExtendCollectionsProvider collections={[apiProxyApisCollection]}>
             <SchemaComponent
               schema={settingPageSchema}
-              scope={{ useSubmitActionProps, useEditFormProps, useDeleteActionProps, Icon }}
+              scope={{ useSubmitActionProps, useEditFormProps, useDeleteActionProps, Icon, t }}
             />
           </ExtendCollectionsProvider>
         );
