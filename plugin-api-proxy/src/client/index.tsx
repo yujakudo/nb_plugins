@@ -3,6 +3,7 @@ import {
   SchemaComponent,
   Icon,
   Plugin,
+  Markdown,
 } from '@nocobase/client';
 import { name } from '../../package.json';
 import React from 'react';
@@ -23,6 +24,7 @@ class ApiProxyPluginClient extends Plugin {
           <ExtendCollectionsProvider collections={[apiProxyApisCollection]}>
             <SchemaComponent
               schema={settingPageSchema}
+              components={{ Markdown }}
               scope={{ useSubmitActionProps, useEditFormProps, useDeleteActionProps, Icon, t }}
             />
           </ExtendCollectionsProvider>

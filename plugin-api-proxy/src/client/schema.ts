@@ -45,9 +45,21 @@ var addNewFormDrawer = {
                     'x-decorator': 'FormItem',
                     'x-component': 'CollectionField',
                   },
+                },
+              },
+              tabDescription: {
+                type: 'void',
+                title: '{{t("説明")}}',
+                'x-component': 'Tabs.TabPane',
+                properties: {
                   description: {
                     'x-decorator': 'FormItem',
                     'x-component': 'CollectionField',
+                    'x-component-props': {
+                      autoSize: {
+                        minRows: 10,
+                      },
+                    },
                   },
                 },
               },
