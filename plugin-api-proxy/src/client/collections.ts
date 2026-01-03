@@ -50,6 +50,7 @@ export const apiProxyApisCollection = {
         enum: [
           { label: 'GET', value: 'GET' },
           { label: 'POST', value: 'POST' },
+          { label: 'PUSH', value: 'PUSH' },
         ],
         default: 'GET',
         'x-decorator-props': {

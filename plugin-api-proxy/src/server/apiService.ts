@@ -16,6 +16,8 @@ export interface ApiSettings {
   baseUrl: string;      // APIの基準URL
   requestConfig: any;   // axios のリクエスト設定
   repoData: ApiProxyRecord | null;        // レポジトリのデータ。
+  action?: string;      // アクション (get, list)
+  filter?: any;         // フィルタ
 }
 
 /**
@@ -43,7 +45,7 @@ async function getApiSettings_old(ctx: Context, apiName: string,): Promise<ApiSe
   }
 
   // API定義を反映
-  res.repoData = typeof record.toJSON === 'function' ? record.toJSON() : record;
+  res.repoData = (typeof record.toJSON === 'function') ? record.toJSON() : record;
   res.baseUrl = res.repoData.url;
   res.status = 200;
   res.message = 'ok';
@@ -75,7 +77,7 @@ export async function getApiSettings(ctx: Context, apiName: string,): Promise<Ap
     res.status = 200;
     res.message = 'ok';
   } catch (error) {
-    res.status = typeof error.cause === 'number' ? error.cause : 500;
+    res.status = (typeof error.cause === 'number') ? error.cause : 500;
     res.message = error.message || 'internal error';
   }
 
@@ -102,7 +104,7 @@ export async function getRepositoryData(ctx: Context, apiName: string): Promise<
     throw new Error(`API "${apiName}" is not found.`, { cause: 404 });
   }
 
-  const data: ApiProxyRecord = typeof record.toJSON === 'function' ? record.toJSON() : record;
+  const data: ApiProxyRecord = (typeof record.toJSON === 'function') ? record.toJSON() : record;
 
   // 2. 利用制限がない場合は、最終アクセス日時のみ更新して終了
   if (data.limit === 'none') {
@@ -130,7 +132,7 @@ export async function getRepositoryData(ctx: Context, apiName: string): Promise<
       throw new Error(`API "${apiName}" is not found.`, { cause: 404 });
     }
 
-    const lockedData: ApiProxyRecord = typeof lockedRecord.toJSON === 'function' ? lockedRecord.toJSON() : lockedRecord;
+    const lockedData: ApiProxyRecord = (typeof lockedRecord.toJSON === 'function') ? lockedRecord.toJSON() : lockedRecord;
 
     lockedData.lastAccessAt = new Date();   // 現在時刻の取得
 

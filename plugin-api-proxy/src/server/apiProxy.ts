@@ -2,6 +2,7 @@ import axios from 'axios';
 import { isString } from 'lodash';
 import { Context } from 'koa'; // KoaのContext型をインポート
 import { getApiSettings, ApiSettings } from './apiService';
+import { ApiMapper } from './apiMapper';
 
 /**
  * APIプロキシの実装
@@ -20,8 +21,19 @@ export async function apiProxy(ctx: Context, basePath: string) {
     console.log(`[ProxyApiPlugin] Proxying ${ctx.method} request to: ${api.requestConfig.url}`);
 
     try {
+        // リクエストマッピングの適用
+        if (api.repoData.mappingEnabled) {
+            ApiMapper.applyRequestMapping(api);
+        }
+
         // axiosでリクエスト
         const response = await axios.request(api.requestConfig);
+
+        // レスポンスマッピングの適用
+        if (api.repoData.mappingEnabled) {
+            response.data = await ApiMapper.applyResponseMapping(response.data, api);
+        }
+
         buildResponse(ctx, response);
 
     } catch (error) {
@@ -83,8 +95,11 @@ function getApi(ctx: Context, basePath: string): Promise<ApiSettings> {
     const urls = new URL(request.href);
     const proxyPath = urls.pathname.replace(basePath + '/', '');
     const pathParts = proxyPath.split('/');
-    const apiName = pathParts.shift() || '';
-    const extPath = pathParts.join('/');
+    const apiNames = pathParts.shift() || '';
+    const apiNameParts = apiNames.split(':');
+    const apiName = apiNameParts.shift() || '';
+    const apiAction = apiNameParts.shift() || '';
+    // const extPath = pathParts.join('/');
 
     return getApiSettings(ctx, apiName).then((res) => {
         if (res.status !== 200) {
@@ -93,7 +108,8 @@ function getApi(ctx: Context, basePath: string): Promise<ApiSettings> {
 
         res.requestConfig.method = request.method;
         // URL作成
-        res.requestConfig.url = res.baseUrl + (extPath ? '/' + extPath : '');
+        // res.requestConfig.url = res.baseUrl + (extPath ? '/' + extPath : '');
+        res.requestConfig.url = res.baseUrl;
         res.requestConfig.params = Object.fromEntries(urls.searchParams.entries());
 
         // ヘッダコピー
@@ -109,9 +125,13 @@ function getApi(ctx: Context, basePath: string): Promise<ApiSettings> {
             Object.assign(res.requestConfig.headers, res.repoData.headers);
         }
         // リクエストボディコピー
-        if (['POST', 'PUT', 'PATCH'].includes(request.method) && request.body) {
+        if (['POST', 'PUT', 'PATCH', 'PUSH'].includes(request.method) && request.body) {
             res.requestConfig.data = request.body;
         }
+
+        // マッピング用オプション
+        res.action = apiAction || (ctx.query.action as string) || 'list';
+        res.filter = ctx.query.filter ? ((typeof ctx.query.filter === 'string') ? JSON.parse(ctx.query.filter) : ctx.query.filter) : undefined;
 
         return res;
     });

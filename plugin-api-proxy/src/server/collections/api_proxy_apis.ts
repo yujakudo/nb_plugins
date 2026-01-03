@@ -15,6 +15,8 @@ export default defineCollection({
     { type: 'string', name: 'name', allowNull: false },
     // APIのURL
     { type: 'string', name: 'url', allowNull: false },
+    // HTTPメソッド
+    { type: 'string', name: 'method', defaultValue: 'GET' },
     // APIの説明
     { type: 'text', name: 'description' },
     // APIの利用制限。なし、日次、週次、月次、年次より選択
@@ -79,6 +81,7 @@ export interface ApiProxyRecord {
   id: number;
   name: string;
   url: string;
+  method: string;
   headers?: any;
   description?: string;
   limit: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly';

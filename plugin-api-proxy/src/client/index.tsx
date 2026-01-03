@@ -8,7 +8,15 @@ import {
 import { name } from '../../package.json';
 import React from 'react';
 import { apiProxyApisCollection } from './collections';
-import { useSubmitActionProps, useEditFormProps, useDeleteActionProps } from './hooks';
+import {
+  useSubmitActionProps,
+  useEditFormProps,
+  useDeleteActionProps,
+  useRunTestActionProps,
+  useTestUrlProps,
+  useSaveTestParamsActionProps,
+  useSaveExpectedResponseActionProps,
+} from './hooks';
 import { settingPageSchema } from './schema';
 import { useT } from './locale';
 
@@ -25,13 +33,23 @@ class ApiProxyPluginClient extends Plugin {
             <SchemaComponent
               schema={settingPageSchema}
               components={{ Markdown }}
-              scope={{ useSubmitActionProps, useEditFormProps, useDeleteActionProps, Icon, t }}
+              scope={{
+                useSubmitActionProps,
+                useEditFormProps,
+                useDeleteActionProps,
+                useRunTestActionProps,
+                useTestUrlProps,
+                useSaveTestParamsActionProps,
+                useSaveExpectedResponseActionProps,
+                Icon,
+                t,
+              }}
             />
           </ExtendCollectionsProvider>
         );
       },
     });
   }
-};
+}
 
 export default ApiProxyPluginClient;

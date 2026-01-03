@@ -14,10 +14,19 @@ var addNewFormDrawer = {
         type: 'void',
         'x-component': 'FormV2',
         properties: {
+          activeTab: {
+            type: 'string',
+            'x-decorator': 'FormItem',
+            'x-component': 'Input',
+            'x-display': 'none',
+            default: 'tab1',
+          },
           tabs: {
             type: 'void',
             'x-component': 'Tabs',
-            'x-component-props': {},
+            'x-component-props': {
+              onChange: '{{(key) => $form.setValues({activeTab: key})}}',
+            },
             properties: {
               tab1: {
                 type: 'void',
@@ -148,21 +157,6 @@ var addNewFormDrawer = {
                   },
                 },
               },
-              tabTesting: {
-                type: 'void',
-                title: '{{t("テスト設定")}}',
-                'x-component': 'Tabs.TabPane',
-                properties: {
-                  testParams: {
-                    'x-decorator': 'FormItem',
-                    'x-component': 'CollectionField',
-                  },
-                  expectedResponse: {
-                    'x-decorator': 'FormItem',
-                    'x-component': 'CollectionField',
-                  },
-                },
-              },
               tab2: {
                 type: 'void',
                 title: '{{t("利用制限設定")}}',
@@ -260,23 +254,180 @@ var addNewFormDrawer = {
                   },
                 },
               },
+              tabRunTest: {
+                type: 'void',
+                title: '{{t("テスト")}}',
+                'x-component': 'Tabs.TabPane',
+                properties: {
+                  testUrlDisplay: {
+                    type: 'string',
+                    title: '{{t("URL")}}',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'Input',
+                    'x-component-props': {
+                      readOnly: true,
+                    },
+                    'x-use-component-props': 'useTestUrlProps',
+                  },
+                  testParamsInput: {
+                    type: 'string',
+                    title: '{{t("リクエストデータ")}}',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'Input.TextArea',
+                    'x-reactions': [
+                      {
+                        dependencies: ['testParams'],
+                        fulfill: {
+                          state: {
+                            value: '{{$deps[0]}}',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  requestActions: {
+                    type: 'void',
+                    'x-component': 'ActionBar',
+                    'x-component-props': {
+                      style: { marginBottom: 16 },
+                    },
+                    properties: {
+                      runButton: {
+                        type: 'void',
+                        'x-component': 'Action',
+                        title: '{{t("リクエストの送信")}}',
+                        'x-align': 'left',
+                        'x-component-props': {
+                          type: 'primary',
+                        },
+                        'x-use-component-props': 'useRunTestActionProps',
+                      },
+                      saveTestParamsButton: {
+                        type: 'void',
+                        'x-component': 'Action',
+                        title: '{{t("リクエストデータの保存")}}',
+                        'x-align': 'right',
+                        'x-use-component-props': 'useSaveTestParamsActionProps',
+                      },
+                    },
+                  },
+                  testResult: {
+                    type: 'string',
+                    title: '{{t("テスト結果")}}',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'Input',
+                    'x-component-props': {
+                      readOnly: true,
+                    },
+                    'x-reactions': [
+                      {
+                        dependencies: ['expectedResponseDisplay', 'testMappedResponseDisplay'],
+                        fulfill: {
+                          state: {
+                            visible: '{{!!$deps[0]}}',
+                            value: '{{$deps[0] === $deps[1] ? "OK" : "NG"}}',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  apiRequestMappingResult: {
+                    type: 'string',
+                    title: '{{t("APIへのリクエストデータ")}}',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'Input.TextArea',
+                    'x-component-props': {
+                      readOnly: true,
+                    },
+                  },
+                  testStatusDisplay: {
+                    type: 'number',
+                    title: '{{t("ステータス")}}',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'Input',
+                    'x-component-props': {
+                      readOnly: true,
+                    },
+                  },
+                  apiRawResponseDisplay: {
+                    type: 'string',
+                    title: '{{t("APIからのレスポンスデータ")}}',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'Input.TextArea',
+                    'x-component-props': {
+                      readOnly: true,
+                    },
+                  },
+                  testMappedResponseDisplay: {
+                    type: 'string',
+                    title: '{{t("レスポンスデータ")}}',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'Input.TextArea',
+                    'x-component-props': {
+                      readOnly: true,
+                    },
+                  },
+                  expectedResponseDisplay: {
+                    type: 'string',
+                    title: '{{t("期待されるレスポンス")}}',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'Input.TextArea',
+                    'x-component-props': {
+                    },
+                    'x-reactions': [
+                      {
+                        dependencies: ['testParamsInput', 'testParams', 'expectedResponse'],
+                        fulfill: {
+                          state: {
+                            value: '{{$deps[0] === $deps[1] ? $deps[2] : ""}}',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  saveExpectedResponseActions: {
+                    type: 'void',
+                    'x-component': 'ActionBar',
+                    'x-component-props': {
+                      style: { marginBottom: 800 },
+                    },
+                    properties: {
+                      saveExpectedResponseButton: {
+                        type: 'void',
+                        'x-component': 'Action',
+                        title: '{{t("期待されるレスポンスの保存")}}',
+                        'x-align': 'right',
+                        'x-use-component-props': 'useSaveExpectedResponseActionProps',
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
           footer: {
             type: 'void',
             'x-component': 'Action.Drawer.Footer',
+            'x-reactions': {
+              dependencies: ['activeTab'],
+              fulfill: {
+                state: {
+                  visible: '{{$deps[0] !== "tabRunTest"}}',
+                },
+              },
+            },
             properties: {
               submit: {
                 title: '{{t("送信")}}',
                 'x-component': 'Action',
                 'x-use-component-props': 'useSubmitActionProps',
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     },
-  }
+  },
 };
 
 // 編集フォーム
