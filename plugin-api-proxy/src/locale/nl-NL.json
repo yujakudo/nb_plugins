@@ -35,5 +35,20 @@
     "APIプロキシ": "API Proxy",
     "新規追加": "Nieuw toevoegen",
     "送信": "Verzenden",
-    "編集": "Bewerken"
+    "編集": "Bewerken",
+    "テスト": "Test",
+    "リクエストデータ": "Verzoekgegevens",
+    "リクエストの送信": "Verzoek verzenden",
+    "リクエストデータの保存": "Verzoekgegevens opslaan",
+    "テスト結果": "Testresultaat",
+    "APIへのリクエストデータ": "Verzoekgegevens naar API",
+    "ステータス": "Status",
+    "レスポンス": "Respons",
+    "マッピング後のデータ": "Gemapte gegevens",
+    "期待されるレスポンスの保存": "Verwachte respons opslaan",
+    "API名が設定されていません": "API-naam is niet ingesteld",
+    "テストを実行しました": "Test uitgevoerd",
+    "テスト実行中にエラーが発生しました": "Fout opgetreden tijdens testuitvoering",
+    "リクエストデータを保存しました": "Verzoekgegevens opgeslagen",
+    "期待されるレスポンスを保存しました": "Verwachte respons opgeslagen"
 }

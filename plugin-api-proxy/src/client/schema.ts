@@ -321,11 +321,11 @@ var addNewFormDrawer = {
                     },
                     'x-reactions': [
                       {
-                        dependencies: ['expectedResponseDisplay', 'testMappedResponseDisplay'],
+                        dependencies: ['expectedResponseDisplay', 'apiRawResponseDisplay'],
                         fulfill: {
                           state: {
                             visible: '{{!!$deps[0]}}',
-                            value: '{{$deps[0] === $deps[1] ? "OK" : "NG"}}',
+                            value: '{{compareResponses($deps[0], $deps[1])}}',
                           },
                         },
                       },
@@ -351,7 +351,7 @@ var addNewFormDrawer = {
                   },
                   apiRawResponseDisplay: {
                     type: 'string',
-                    title: '{{t("APIからのレスポンスデータ")}}',
+                    title: '{{t("レスポンス")}}',
                     'x-decorator': 'FormItem',
                     'x-component': 'Input.TextArea',
                     'x-component-props': {
@@ -360,7 +360,7 @@ var addNewFormDrawer = {
                   },
                   testMappedResponseDisplay: {
                     type: 'string',
-                    title: '{{t("レスポンスデータ")}}',
+                    title: '{{t("マッピング後のデータ")}}',
                     'x-decorator': 'FormItem',
                     'x-component': 'Input.TextArea',
                     'x-component-props': {

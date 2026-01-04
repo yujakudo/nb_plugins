@@ -16,11 +16,20 @@ import {
   useTestUrlProps,
   useSaveTestParamsActionProps,
   useSaveExpectedResponseActionProps,
+  compareResponses,
 } from './hooks';
 import { settingPageSchema } from './schema';
 import { useT } from './locale';
 
+/**
+ * APIプロキシプラグインのクライアントサイド実装クラス
+ */
 class ApiProxyPluginClient extends Plugin {
+
+  /**
+   * プラグインの初期化処理
+   * 設定ページを登録する
+   */
   async load() {
     // 設定ページの登録
     this.app.pluginSettingsManager.add(name, {
@@ -41,6 +50,7 @@ class ApiProxyPluginClient extends Plugin {
                 useTestUrlProps,
                 useSaveTestParamsActionProps,
                 useSaveExpectedResponseActionProps,
+                compareResponses,
                 Icon,
                 t,
               }}

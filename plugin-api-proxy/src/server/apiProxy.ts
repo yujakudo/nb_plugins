@@ -4,6 +4,17 @@ import { Context } from 'koa'; // KoaのContext型をインポート
 import { getApiSettings, ApiSettings } from './apiService';
 import { ApiMapper } from './apiMapper';
 
+// テストログ保持用キャッシュ (トークン -> ログデータ)
+export const testLogCache = new Map<string, any>();
+
+// TTL (5分) で自動削除する仕組み（簡易版）
+const setWithTtl = (token: string, data: any) => {
+    testLogCache.set(token, data);
+    setTimeout(() => {
+        testLogCache.delete(token);
+    }, 5 * 60 * 1000);
+};
+
 /**
  * APIプロキシの実装
  * @param ctx {Context} コンテキスト
@@ -18,27 +29,49 @@ export async function apiProxy(ctx: Context, basePath: string) {
         return;
     }
 
-    console.log(`[ProxyApiPlugin] Proxying ${ctx.method} request to: ${api.requestConfig.url}`);
+    const testToken = ctx.get('X-Api-Proxy-Test');
+    const isTestMode = !!testToken;
+    const testLog: any = isTestMode ? {
+        apiRequestMappingResult: null,
+        apiRawResponse: null,
+    } : null;
+
+    console.log(`[ProxyApiPlugin] Proxying ${ctx.method} request to: ${api.requestConfig.url}${isTestMode ? ' (TEST MODE)' : ''}`);
 
     try {
         // リクエストマッピングの適用
         if (api.repoData.mappingEnabled) {
             ApiMapper.applyRequestMapping(api);
+            if (isTestMode) {
+                testLog.apiRequestMappingResult = api.requestConfig.data || api.requestConfig.params;
+            }
         }
 
         // axiosでリクエスト
         const response = await axios.request(api.requestConfig);
+
+        if (isTestMode) {
+            testLog.apiRawResponse = response.data;
+        }
 
         // レスポンスマッピングの適用
         if (api.repoData.mappingEnabled) {
             response.data = await ApiMapper.applyResponseMapping(response.data, api);
         }
 
+        if (isTestMode) {
+            setWithTtl(testToken, testLog);
+        }
+
         buildResponse(ctx, response);
 
     } catch (error) {
         console.error('[ProxyApiPlugin] Proxy Error:', error.message);
-        if (axios.isAxiosError(error) && error.response) { // axiosのエラーチェックを戻す
+        if (axios.isAxiosError(error) && error.response) {
+            if (isTestMode) {
+                testLog.apiRawResponse = error.response.data;
+                setWithTtl(testToken, testLog);
+            }
             buildErrorResponse(ctx, error.response.status, error.response.data);
         } else {
             buildErrorResponse(ctx, 500, 'Internal Server Error during proxy request.');

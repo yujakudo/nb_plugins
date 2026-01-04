@@ -96,9 +96,14 @@ export class ApiMapper {
      */
     private static parseCsv(csvText: string, hasHeader: boolean): Promise<any[]> {
         return new Promise((resolve, reject) => {
+            const num = 30; // 30列まで対応
+            //  ヘッダーなしの場合は列名を１からの連番にする
+            const headersParam = hasHeader ?
+                true :
+                Array.from({ length: num }, (_, index) => String(index + 1));
             const results: any[] = [];
             const { parseString } = require('fast-csv');
-            parseString(csvText, { headers: hasHeader })
+            parseString(csvText, { headers: headersParam })
                 .on('error', error => reject(error))
                 .on('data', row => results.push(row))
                 .on('end', () => resolve(results));

@@ -74,5 +74,20 @@
   "レスポンスマッピングTooltipText": "Specify field to store the text (e.g., `{\"content\": \"root\"}`).",
   "テストパラメータTooltip": "Enter sample parameters to use for the connection test.",
   "期待されるレスポンスTooltip": "Enter the expected response content to verify the test success.",
-  "メソッドTooltip": "Select the HTTP method for the API request (GET/POST)."
+  "メソッドTooltip": "Select the HTTP method for the API request (GET/POST).",
+  "テスト": "Test",
+  "リクエストデータ": "Request Data",
+  "リクエストの送信": "Send Request",
+  "リクエストデータの保存": "Save Request Data",
+  "テスト結果": "Test Result",
+  "APIへのリクエストデータ": "Request Data to API",
+  "ステータス": "Status",
+  "レスポンス": "Response",
+  "マッピング後のデータ": "Mapped Data",
+  "期待されるレスポンスの保存": "Save Expected Response",
+  "API名が設定されていません": "API name is not set",
+  "テストを実行しました": "Test executed",
+  "テスト実行中にエラーが発生しました": "Error occurred during test execution",
+  "リクエストデータを保存しました": "Request data saved",
+  "期待されるレスポンスを保存しました": "Expected response saved"
 }
